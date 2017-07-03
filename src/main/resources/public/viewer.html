@@ -1,0 +1,68 @@
+<link rel="stylesheet" href="http://www.w3schools.com/lib/w3.css">
+<div class="jumbotron text-center">
+    <label>Log Type</label>
+    <input type="checkbox" ng-model="logTypeFilterLock" ></label>
+    <input class="w3-input w3-border" type="text" ng-model="logTypeFilter" ng-disabled="!logTypeFilterLock" placeholder="">
+    <label>Source</label>
+    <input type="checkbox" ng-model="sourceFilterLock" ></label>
+    <input class="w3-input w3-border" type="text" ng-model="sourceFilter" ng-disabled="!sourceFilterLock" placeholder="">
+    <label>Start Date</label>
+    <input type="checkbox" ng-model="startDateFilterLock" ></label>
+    <input class="w3-input w3-border" type="text" ng-model="startDateFilter" ng-disabled="!startDateFilterLock" placeholder="">
+    <label>End Date</label>
+    <input type="checkbox" ng-model="endDateFilterLock" ></label>
+    <input class="w3-input w3-border" type="text" ng-model="endDateFilter" ng-disabled="!endDateFilterLock" placeholder="">
+    <br>
+
+    <form ng-show=logTypeFilterLock>
+        <div ng-repeat="someFieldName in logName.fields.slice(3,entries.length)" text-center>
+
+                    <label>{{ someFieldName }}</label>
+                    <input type="checkbox" ng-model="additionalFieldsChecker[someFieldName]" ></label>
+
+            <input class="w3-input w3-border" type="text" ng-model="additionalFieldsFilter[someFieldName]" ng-disabled="!additionalFieldsChecker[someFieldName]" placeholder="">
+        </div>
+
+    </form>
+    <button class="w3-btn w3-green w3-ripple"  ng-click="filter()">&#9998; Filter</button>
+
+    <table class="w3-table w3-bordered w3-striped" ng-hide=logTypeFilterLock>
+        <tr>
+            <th><a href="" ng-click="reverseLog=!reverseLog;orderByColumn='logName';reverse=reverseLog">Log</a></th>
+            <th><a href="" ng-click="reverseSource=!reverseSource;orderByColumn=orderByIp;reverse=reverseSource">Source</a></th>
+            <th><a href="" ng-click="reverseTime=!reverseTime;orderByColumn=orderByDate;reverse=reverseTime">Time</a></th>
+            <th>Show</th>
+            <th>Delete</th>
+        </tr>
+        <tr ng-repeat-start="logRecord in logs | orderBy : orderByColumn : reverse">
+            <td>{{ logRecord.logName }}</td>
+            <td>{{ logRecord.source }}</td>
+            <td>{{ logRecord.timestamp }}</td>
+
+            <td>
+                <button class="w3-btn w3-red w3-ripple" ng-if="!logRecord.expanded" ng-click="logRecord.expanded = true">&#9998; Show</button>
+                <button class="w3-btn w3-red w3-ripple" ng-if="logRecord.expanded" ng-click="logRecord.expanded = false">&#9998; Hide</button>
+            </td>
+            <td><button class="w3-btn w3-yellow w3-ripple" ng-click="removeItem(logRecord.logName,logRecord.id)">&#9998; Delete</button></td>
+        </tr>
+        <tr ng-if="logRecord.expanded" ng-repeat-end="">
+            <td colspan="5">{{logRecord.expandedField}}</td>
+        </tr>
+    </table>
+
+    <table class="w3-table w3-bordered w3-striped" ng-show=logTypeFilterLock>
+        <tr>
+            <th ng-repeat="fieldName in logName.fields"><a href="" ng-click="order($index,reverse); reverse=!reverse">{{fieldName}}</a ></th>
+            <th>Delete</th>
+        </tr>
+        <tr ng-repeat="record in logRecords">
+            <td>{{ record.id }}</td>
+            <td>{{ record.source }}</td>
+            <td>{{ record.timestamp }}</td>
+            <td ng-repeat="fieldValue in record.otherFields">{{ fieldValue }}</td>
+
+            <td><button class="w3-btn w3-yellow w3-ripple" ng-click="removeItem(record.logName,record.id)">&#9998; Delete</button></td>
+        </tr>
+
+    </table>
+</div>
